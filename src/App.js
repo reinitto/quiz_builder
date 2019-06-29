@@ -2,10 +2,12 @@ import React from 'react';
 import QuizForm from './components/QuizForm';
 import Quiz from './components/Quiz';
 import { Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { Router } from 'react-router';
+import store from './store';
 import { createBrowserHistory } from 'history';
-
 export const history = createBrowserHistory();
+
 function Home() {
   return (
     <div className='text-center container '>
@@ -17,26 +19,16 @@ function Home() {
     </div>
   );
 }
-// class App extends React.Component {
-//   render() {
-//     return (
-//       <Router>
-//         <Switch>
-//           <Route path='/' exact component={Home} />
-//           <Route path='quiz/:id' component={Quiz} />
-//         </Switch>
-//       </Router>
-//     );
-//   }
-// }
 
 const App = () => (
-  <Router history={history}>
-    <Switch>
-      <Route path='/' exact component={Home} />
-      <Route path='/quiz/:id' component={Quiz} />
-    </Switch>
-  </Router>
+  <Provider store={store}>
+    <Router history={history}>
+      <Switch>
+        <Route path='/' exact component={Home} />
+        <Route path='/quiz/:id' component={Quiz} />
+      </Switch>
+    </Router>
+  </Provider>
 );
 
 export default App;

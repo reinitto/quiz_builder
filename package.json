@@ -8,15 +8,21 @@
     "dotenv": "8.0.0",
     "express": "4.17.1",
     "history": "^4.9.0",
+    "knuth-shuffle": "^1.0.8",
     "mongoose": "5.6.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
+    "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
     "uuid": "3.3.2"
   },
   "devDependencies": {
+    "concurrently": "^4.1.1",
     "nodemon": "^1.19.1",
     "typescript": "3.3.3"
   },
@@ -25,12 +31,15 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "serve": " node server.js"
+    "server": " node server.js",
+    "dev": "concurrently npm:start npm:server"
   },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "proxy": "http://localhost:5000",
+  "localhost": "127.0.0.1"
 }

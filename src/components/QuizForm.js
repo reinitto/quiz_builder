@@ -1,92 +1,81 @@
 import React, { Component } from 'react';
-import Question from './Question';
-import QuestionDisplay from './QuestionDisplay';
-import uuidv4 from 'uuid/v4';
+import { connect } from 'react-redux';
+import { addQuestion, submitQuiz } from '../actions/QuizActions';
+import QuestionBuilder from './QuestionBuilder';
 import { history } from '../App';
-class QuizForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      questions: [{ id: 777 }]
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.newQuestion = this.newQuestion.bind(this);
-    this.addQuestion = this.addQuestion.bind(this);
-    this.handleQuestion = this.handleQuestion.bind(this);
-    this.updateQuestion = this.updateQuestion.bind(this);
-  }
+var shuffle = require('knuth-shuffle').knuthShuffle;
 
-  addQuestion(question) {
-    //id is in array
-    let isInArray = this.state.questions.filter(q => q.id === question.id);
-    if (isInArray.length === 0) {
-      this.setState({
-        questions: [...this.state.questions, question]
-      });
+class QuizForm extends Component {
+  state = {
+    name: ''
+  };
+
+  componentDidMount() {
+    //initialize first question
+    if (this.props.questions.length === 0) {
+      this.props.addQuestion();
     }
   }
-
-  handleQuestion(e) {
+  handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
-  }
-  handleChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-  }
+  };
 
-  newQuestion(e, question) {
-    e.preventDefault();
-    this.addQuestion(question);
-  }
-
-  updateQuestion(state) {
-    //find question by id
-    let newQuestion = { ...state };
+  setErrorMessage(message) {
     this.setState({
-      questions: [
-        ...this.state.questions.filter(q => q.id !== state.id),
-        newQuestion
-      ]
+      error: message
     });
-  }
-  getId() {
-    return uuidv4();
+    setTimeout(() => {
+      this.setState({
+        error: null
+      });
+    }, 3000);
   }
 
   onSubmit = async e => {
     e.preventDefault();
-    let quiz = {
-      ...this.state,
-      questions: this.state.questions.filter(q => q.id !== 777)
-    };
-
-    const res = await fetch('/quiz', {
-      method: 'POST',
-      body: JSON.stringify(quiz),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await res.json();
-    console.log('data:', data);
-
-    if (data !== undefined) {
-      console.log('data:', data);
-      history.push(`/quiz/${data}`);
+    //check if all required fields for all questions are not empty
+    let incomplete = this.props.questions.filter(
+      q => q.requiredFieldsEmpty === true
+    );
+    if (incomplete.length > 0) {
+      this.setErrorMessage('Please fill out all questions');
+    } else {
+      let questions = this.props.questions.map(q => {
+        let randomOrderedAnswers = shuffle(
+          [
+            q.correct_answer,
+            q.other_answers1,
+            q.other_answers2,
+            q.other_answers3
+          ].slice(0)
+        );
+        return {
+          correct_answer: q.correct_answer,
+          created: q.created,
+          error: q.error,
+          id: q.id,
+          img_src: q.img_src,
+          index: q.index,
+          answers: randomOrderedAnswers,
+          question: q.question
+        };
+      });
+      let quiz = {
+        questions,
+        name: this.state.name
+      };
+      const id = await this.props.submitQuiz(quiz);
+      history.push(`/quiz/${id}`);
     }
   };
   render() {
-    let content = this.state.questions.map((q, i) => (
-      <React.Fragment key={i}>
-        <QuestionDisplay {...q} />
-        <Question
-          handleQuestion={this.handleQuestion}
-          key={q.id}
-          updateQuestion={this.updateQuestion}
-          addQuestion={this.addQuestion}
-        />
-      </React.Fragment>
-    ));
+    let content = this.props.questions
+      ? this.props.questions.map((q, i) => (
+          <React.Fragment key={i}>
+            <QuestionBuilder key={q.id} {...q} index={i} />
+          </React.Fragment>
+        ))
+      : null;
     return (
       <div>
         <div className='input-group input-group-lg mb-3'>
@@ -106,6 +95,20 @@ class QuizForm extends Component {
         </div>
 
         <div>{content}</div>
+        {this.state.error && (
+          <div className='alert alert-danger' role='alert'>
+            {this.state.error}
+          </div>
+        )}
+        <div className='btn-group d-flex justify-content-center'>
+          <button
+            className='btn btn-success btn-sm btn-block'
+            onClick={this.props.addQuestion}
+          >
+            {' '}
+            Add question{' '}
+          </button>
+        </div>
         <input
           className='btn btn-primary btn-block'
           type='submit'
@@ -117,4 +120,12 @@ class QuizForm extends Component {
   }
 }
 
-export default QuizForm;
+const mapStateToProps = ({ quizBuilder: { name, questions } }) => ({
+  name,
+  questions
+});
+
+export default connect(
+  mapStateToProps,
+  { addQuestion, submitQuiz }
+)(QuizForm);

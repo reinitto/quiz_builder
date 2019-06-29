@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const Quiz = require('./models/Quiz');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const db = process.env.MONGO_URI;
 require('dotenv').config();
 //Connect Database
@@ -17,7 +17,7 @@ const connectDB = async () => {
       useFindAndModify: false
     });
 
-    console.log('MongoDB Connected...');
+    console.log(`MongoDB Connected on port ${PORT}`);
   } catch (error) {
     console.error(error.message);
     process.exit(1);
@@ -44,13 +44,21 @@ app.post('/quiz', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+app.get('/quiz/:id', async (req, res) => {
+  try {
+    let quiz = await Quiz.findById(req.params.id);
+    res.json(quiz);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
 // @route       GET /quiz/:id
 // @desc        Get guiz by id
 // @access      Public
 app.get('/getquiz/:id', async (req, res) => {
   try {
     let quiz = await Quiz.findById(req.params.id);
-    console.log('sending back the quiz');
     res.json(quiz);
   } catch (error) {
     console.error(error.message);
@@ -61,8 +69,12 @@ app.get('/getquiz/:id', async (req, res) => {
 app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'src', 'App.js'));
 });
+
+// app.get('/', function(req, res) {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
 
 app.listen(PORT, () => console.log('Gator app listening on port 3000!'));

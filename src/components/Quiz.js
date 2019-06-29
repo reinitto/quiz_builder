@@ -1,38 +1,107 @@
-import React from 'react';
-//({ name, questions })
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { setQuiz, showAnswers } from '../actions/answerQuizActions';
+import { Link } from 'react-router-dom';
+import QuestionDisplay from './QuestionDisplay';
 class Quiz extends React.Component {
   state = {
-    name: '',
-    questions: []
+    score: null,
+    submitted: false
   };
-  async componentDidMount() {
-    let res = await fetch(`/getquiz/${this.props.match.params.id}`);
-    const data = await res.json();
-    console.log(data);
-    this.setState({
-      name: data.name,
-      questions: data.questions
-    });
+  componentDidMount() {
+    this.props.setQuiz(this.props.match.params.id);
   }
+
+  setErrorMessage(message) {
+    this.setState({
+      error: message
+    });
+    setTimeout(() => {
+      this.setState({
+        error: null
+      });
+    }, 3000);
+  }
+
+  onSubmit() {
+    //check if all questions have been amswered
+    let unanswered = this.props.questions.filter(q => !q.userAnswer);
+
+    if (unanswered.length === 0) {
+      //all questions answered
+      //show correct answers
+      this.props.showAnswers();
+      //set score
+      this.setState({
+        score: this.calculateScore(this.props.questions),
+        submitted: true
+      });
+    } else {
+      this.setErrorMessage('Please answer all questions');
+    }
+  }
+
+  calculateScore(questions) {
+    const score = questions.reduce((acc, q) => {
+      if (q.correct_answer === q.userAnswer) {
+        return ++acc;
+      } else return acc;
+    }, 0);
+    return score;
+  }
+
   render() {
+    const questions =
+      this.props.questions &&
+      this.props.questions.length > 0 &&
+      this.props.questions.map((q, i) => <QuestionDisplay key={i} {...q} />);
+    console.log('score:', this.state.score);
     return (
-      <div className='container'>
-        <h1 className='text-center'>{this.state.name}</h1>
-        {this.state.questions.length > 0 &&
-          this.state.questions.map(q => (
-            <div>
-              <h4>{q.question}</h4>
-              <ul>
-                <li>{q.correct_answer}</li>
-                {q.other_answers.map(o => (
-                  <li>{o}</li>
-                ))}
-              </ul>
+      <Fragment>
+        <div>
+          <Link className=' p-3 ml-3 mt-1 btn btn-primary btn-floating' to='/'>
+            {' '}
+            Build Your Own Quiz{' '}
+          </Link>
+        </div>
+        <div className='container'>
+          <h1 className='text-center'>{this.props.name}</h1>
+          {questions}
+
+          {this.state.error && (
+            <div className='alert alert-danger mt-3' role='alert'>
+              {this.state.error}
             </div>
-          ))}
-      </div>
+          )}
+          {this.state.submitted && (
+            <div className='alert alert-success mt-3' role='alert'>
+              {`You scored  ${this.state.score} / ${
+                this.props.questions.length
+              } questions`}
+            </div>
+          )}
+          <div className='d-flex'>
+            <button
+              disabled={this.state.submitted}
+              onClick={() => this.onSubmit()}
+              className='btn btn-success mx-auto p-3 m-3 w-25'
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </Fragment>
     );
   }
 }
 
-export default Quiz;
+const mapStateToProps = ({ answerQuiz: { name, questions, showAnswers } }) => ({
+  name,
+  questions,
+  showAnswers
+});
+
+export default connect(
+  mapStateToProps,
+  { setQuiz, showAnswers }
+)(Quiz);
