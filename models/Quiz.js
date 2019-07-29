@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const QuizSchema = mongoose.Schema({
   name: {
@@ -10,4 +10,4 @@ const QuizSchema = mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("quiz", QuizSchema);
+module.exports = mongoose.model('quiz', QuizSchema);
