@@ -8,7 +8,6 @@ const QuestionDisplay = props => {
     question,
     answers,
     correct_answer,
-    index,
     img_src,
     id: question_id,
     userAnswer

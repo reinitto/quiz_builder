@@ -1,4 +1,4 @@
-import { SET_QUIZ, UPDATE_ANSWER, SHOW_ANSWERS } from './types';
+import { SET_QUIZ, UPDATE_ANSWER, SHOW_ANSWERS, SEND_ANSWERS } from './types';
 
 export const setQuiz = id => async dispatch => {
   let res = await fetch(`/getquiz/${id}`);
@@ -19,5 +19,10 @@ export const updateAnswer = (answer, question_id) => {
 export const showAnswers = () => {
   return {
     type: SHOW_ANSWERS
+  };
+};
+export const sendAnswers = () => {
+  return {
+    type: SEND_ANSWERS
   };
 };

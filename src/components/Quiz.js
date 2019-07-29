@@ -55,7 +55,6 @@ class Quiz extends React.Component {
       this.props.questions &&
       this.props.questions.length > 0 &&
       this.props.questions.map((q, i) => <QuestionDisplay key={i} {...q} />);
-    console.log('score:', this.state.score);
     return (
       <Fragment>
         <div>
@@ -81,6 +80,12 @@ class Quiz extends React.Component {
             </div>
           )}
           <div className='d-flex'>
+            <div>
+              <div className='input-group-prepend'>
+                <span className='input-group-text'>Enter your name:</span>
+                <input className='form-control' type='text' />
+              </div>
+            </div>
             <button
               disabled={this.state.submitted}
               onClick={() => this.onSubmit()}

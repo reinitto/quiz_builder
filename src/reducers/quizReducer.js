@@ -1,5 +1,4 @@
 import {
-  GET_QUIZ,
   SUBMIT_QUIZ,
   ADD_QUESTION,
   UPDATE_QUESTION,
