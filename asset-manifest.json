@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/quiz_builder/static/js/main.6d260516.chunk.js",
+    "main.js.map": "/quiz_builder/static/js/main.6d260516.chunk.js.map",
+    "runtime~main.js": "/quiz_builder/static/js/runtime~main.a81d949b.js",
+    "runtime~main.js.map": "/quiz_builder/static/js/runtime~main.a81d949b.js.map",
+    "static/js/2.2fbc3229.chunk.js": "/quiz_builder/static/js/2.2fbc3229.chunk.js",
+    "static/js/2.2fbc3229.chunk.js.map": "/quiz_builder/static/js/2.2fbc3229.chunk.js.map",
+    "index.html": "/quiz_builder/index.html",
+    "precache-manifest.acae42dd414ba5b467d3f0137af53e26.js": "/quiz_builder/precache-manifest.acae42dd414ba5b467d3f0137af53e26.js",
+    "service-worker.js": "/quiz_builder/service-worker.js"
+  }
+}
