@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   addQuestion,
   updateQuestion,
-  deleteQuestion
-} from '../actions/QuizActions';
-import QuestionPreview from './QuestionPreview';
-import { connect } from 'react-redux';
+  deleteQuestion,
+} from "../actions/QuizActions";
+import QuestionPreview from "./QuestionPreview";
+import { connect } from "react-redux";
 
 class QuestionBuilder extends Component {
   state = {
@@ -19,23 +19,23 @@ class QuestionBuilder extends Component {
     requiredFieldsEmpty: this.props.requiredFieldsEmpty,
     index: this.props.index,
     error: this.props.error,
-    created: this.props.created
+    created: this.props.created,
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value }, () => {
       this.props.updateQuestion(this.state);
       if (this.requiredFieldsEmpty()) {
         this.setState(
           {
-            requiredFieldsEmpty: true
+            requiredFieldsEmpty: true,
           },
           () => this.props.updateQuestion(this.state)
         );
       } else {
         this.setState(
           {
-            requiredFieldsEmpty: false
+            requiredFieldsEmpty: false,
           },
           () => this.props.updateQuestion(this.state)
         );
@@ -46,15 +46,15 @@ class QuestionBuilder extends Component {
   requiredFieldsEmpty() {
     if (
       this.state.question === undefined ||
-      this.state.question === '' ||
+      this.state.question === "" ||
       this.state.correct_answer === undefined ||
-      this.state.correct_answer === '' ||
+      this.state.correct_answer === "" ||
       this.state.other_answers1 === undefined ||
-      this.state.other_answers1 === '' ||
+      this.state.other_answers1 === "" ||
       this.state.other_answers2 === undefined ||
-      this.state.other_answers2 === '' ||
+      this.state.other_answers2 === "" ||
       this.state.other_answers3 === undefined ||
-      this.state.other_answers3 === ''
+      this.state.other_answers3 === ""
     ) {
       return true;
     } else {
@@ -64,100 +64,123 @@ class QuestionBuilder extends Component {
 
   setErrorMessage(message) {
     this.setState({
-      error: message
+      error: message,
     });
     setTimeout(() => {
       this.setState({
-        error: null
+        error: null,
       });
     }, 3000);
   }
 
   render() {
     return (
-      <div className='form-group list-group-item'>
-        <div className='input-group input-group-sm mb-3'>
-          <div className='input-group-prepend'>
-            <span className='input-group-text bg-info text-white'>
+      <div className="form-group list-group-item bg-secondary my-2">
+        <div className="input-group input-group-sm mb-3">
+          <div className="input-group-prepend">
+            <span
+              className="input-group-text bg-info text-white"
+              style={{
+                width: "120px",
+              }}
+            >
               Question:
             </span>
           </div>
           <input
-            className='form-control'
-            type='text'
-            name='question'
-            value={this.state.question || ''}
+            className="form-control"
+            type="text"
+            name="question"
+            value={this.state.question || ""}
             onChange={this.handleChange}
-            placeholder='Question'
+            placeholder="Question"
           />
         </div>
 
-        <div className='input-group input-group-sm mb-3'>
-          <div className='input-group-prepend'>
-            <span className='input-group-text bg-info text-white'>
+        <div className="input-group input-group-sm mb-3">
+          <div className="input-group-prepend">
+            <span
+              className="input-group-text bg-info text-white"
+              style={{
+                width: "120px",
+              }}
+            >
               Image URL:
             </span>
           </div>
           <input
-            className='form-control'
-            type='text'
-            name='img_src'
+            className="form-control"
+            type="text"
+            name="img_src"
             onChange={this.handleChange}
-            value={this.state.img_src || ''}
-            placeholder='Image link (Optional)'
+            value={this.state.img_src || ""}
+            placeholder="Image link (Optional)"
           />
         </div>
 
-        <div className='input-group input-group-sm mb-3'>
-          <div className='input-group-prepend'>
-            <span className='input-group-text bg-info text-white'>
+        <div className="input-group input-group-sm mb-3">
+          <div className="input-group-prepend">
+            <span
+              className="input-group-text bg-info text-white"
+              style={{
+                width: "120px",
+              }}
+            >
               Correct answer:
             </span>
           </div>
           <input
-            className='form-control'
-            type='text'
-            name='correct_answer'
+            className="form-control"
+            type="text"
+            name="correct_answer"
             onChange={this.handleChange}
-            value={this.state.correct_answer || ''}
-            placeholder='Correct answer'
+            value={this.state.correct_answer || ""}
+            placeholder="Correct answer"
           />
         </div>
 
-        <div className='input-group input-group-sm mb-3 '>
-          <div className='input-group-prepend'>
-            <span className='input-group-text bg-info text-white'>
+        <div className="input-group input-group-sm mb-3 ">
+          <div className="input-group-prepend">
+            <span
+              className="input-group-text bg-info text-white"
+              style={{
+                width: "120px",
+              }}
+            >
               Other answers:
             </span>
           </div>
           <input
-            className='mr-2 form-control'
-            type='text'
-            name='other_answers1'
+            className="mr-2 form-control"
+            type="text"
+            name="other_answers1"
             onChange={this.handleChange}
-            value={this.state.other_answers1 || ''}
-            placeholder='Other answer 1'
+            value={this.state.other_answers1 || ""}
+            placeholder="Other answer 1"
           />
           <input
-            className='mr-2 form-control'
-            type='text'
-            name='other_answers2'
+            className="mr-2 form-control"
+            type="text"
+            name="other_answers2"
             onChange={this.handleChange}
-            value={this.state.other_answers2 || ''}
-            placeholder='Other answer 2'
+            value={this.state.other_answers2 || ""}
+            placeholder="Other answer 2"
           />
           <input
-            className='mr-2 form-control'
-            type='text'
-            name='other_answers3'
+            className="mr-2 form-control"
+            type="text"
+            name="other_answers3"
             onChange={this.handleChange}
-            value={this.state.other_answers3 || ''}
-            placeholder='Other answer 3'
+            value={this.state.other_answers3 || ""}
+            placeholder="Other answer 3"
           />
         </div>
+        <p className="text-left">
+          * <i>Answers will be shuffled automatically</i>{" "}
+        </p>
         <div>
           {this.state.error && (
-            <div className='alert alert-warning' role='alert'>
+            <div className="alert alert-warning" role="alert">
               {this.state.error}
             </div>
           )}
@@ -165,7 +188,7 @@ class QuestionBuilder extends Component {
         <QuestionPreview {...this.state} />
 
         <button
-          className='btn btn-danger mt-3'
+          className="btn btn-danger mt-3"
           onClick={() => this.props.deleteQuestion(this.props.id)}
         >
           Remove Question
@@ -177,7 +200,8 @@ class QuestionBuilder extends Component {
 
 const mapStateToProps = ({ quizBuilder: { questions } }) => ({ questions });
 
-export default connect(
-  mapStateToProps,
-  { addQuestion, updateQuestion, deleteQuestion }
-)(QuestionBuilder);
+export default connect(mapStateToProps, {
+  addQuestion,
+  updateQuestion,
+  deleteQuestion,
+})(QuestionBuilder);
