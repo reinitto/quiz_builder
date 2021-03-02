@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -5,7 +6,6 @@ const Quiz = require("./models/Quiz");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const db = process.env.MONGO_URI;
-require("dotenv").config();
 //Connect Database
 
 const connectDB = async () => {
